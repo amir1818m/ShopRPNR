@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فروشگاه SHOP RP NR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #0d1510;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(0, 255, 102, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 85% 50%, rgba(255, 215, 0, 0.25) 0%, transparent 60%),
+                linear-gradient(135deg, #111e16 0%, #1c1a0e 100%);
+        }
+
+        .neon-line-left {
+            position: absolute;
+            top: -20%;
+            left: 10%;
+            width: 4px;
+            height: 140%;
+            background: #00ff66;
+            box-shadow: 0 0 15px #00ff66, 0 0 35px #00ff66;
+            transform: rotate(20deg);
+            opacity: 0.9;
+        }
+
+        .neon-line-right {
+            position: absolute;
+            top: -20%;
+            right: 10%;
+            width: 4px;
+            height: 140%;
+            background: #ffd700;
+            box-shadow: 0 0 15px #ffd700, 0 0 35px #ffd700;
+            transform: rotate(-20deg);
+            opacity: 0.9;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            margin: auto;
+        }
+
+        .card {
+            background: rgba(22, 32, 26, 0.88);
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #00ff66, #ffd700) 1;
+            border-radius: 16px;
+            padding: 30px 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.2), 0 0 30px rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #00ff66, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .auth-tab-btn.active {
+            background: linear-gradient(90deg, #00ff66, #ffd700);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+        }
+
+        .auth-form-section {
+            display: none;
+        }
+
+        .auth-form-section.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0f0e8;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(10, 18, 14, 0.9);
+            border: 1px solid rgba(0, 255, 102, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(255, 77, 77, 0.15);
+            border: 1px solid #ff4d4d;
+            color: #ff6666;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(0, 255, 102, 0.15);
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #00ff66, #ffd700);
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.5);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        #shop-section {
+            display: none;
+        }
+
+        .owner-balance {
+            background: linear-gradient(135deg, rgba(0, 255, 102, 0.25), rgba(0, 229, 255, 0.25));
+            border: 2px solid #00ffcc;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 21px;
+            color: #00ffcc;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.8);
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .section-header {
+            font-size: 20px;
+            color: #ffffff;
+            margin: 25px 0 10px 0;
+            padding-right: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header.coins { border-right: 4px solid #00ff66; }
+        .section-header.telegram { border-right: 4px solid #2ea6ff; }
+        .section-header.gems { border-right: 4px solid #ffd700; }
+        .section-header.bugs { border-right: 4px solid #ff3366; }
+        .section-header.courses { border-right: 4px solid #ab47bc; }
+        .section-header.rubika { border-right: 4px solid #ff5722; }
+        .section-header.chat { border-right: 4px solid #00e5ff; }
+
+        .notice-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: #ffea70;
+            font-size: 13px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .shop-grid.telegram-grid, .shop-grid.gems-grid, .shop-grid.courses-grid, .shop-grid.rubika-grid { 
+            grid-template-columns: repeat(3, 1fr); 
+        }
+
+        @media (max-width: 768px) {
+            .shop-grid, .shop-grid.telegram-grid, .shop-grid.gems-grid, .shop-grid.rubika-grid { grid-template-columns: repeat(2, 1fr); }
+            .shop-grid.courses-grid { grid-template-columns: 1fr; }
+        }
+
+        .item-card {
+            background: rgba(12, 22, 16, 0.95);
+            border: 1px solid rgba(0, 255, 102, 0.4);
+            border-radius: 12px;
+            padding: 16px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .item-card:hover {
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .item-card.telegram-card { border-color: rgba(46, 166, 255, 0.5); background: rgba(12, 20, 30, 0.95); }
+        .item-card.bug-card { border-color: rgba(255, 51, 102, 0.5); background: rgba(30, 12, 18, 0.95); }
+        .item-card.course-card { border-color: rgba(171, 71, 188, 0.6); background: rgba(25, 15, 30, 0.95); }
+        .item-card.rubika-card { border-color: rgba(255, 87, 34, 0.6); background: rgba(30, 15, 12, 0.95); }
+
+        .discount-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff1744, #d50000);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .item-amount { font-size: 17px; font-weight: bold; color: #ffffff; margin-bottom: 8px; }
+        .item-price { font-size: 15px; color: #ffe600; margin-bottom: 12px; font-weight: bold; background: rgba(255, 230, 0, 0.08); padding: 4px 8px; border-radius: 6px; display: inline-block; }
+
+        .buy-online-btn {
+            padding: 10px 5px;
+            background: linear-gradient(135deg, #ff007f 0%, #7928ca 50%, #00dfd8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .online-users-box {
+            background: rgba(0, 229, 255, 0.07);
+            border: 1px dashed rgba(0, 229, 255, 0.4);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+
+        .online-users-title {
+            font-size: 13px;
+            color: #00ffcc;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .users-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 70px;
+            overflow-y: auto;
+        }
+
+        .user-tag {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 102, 0.4);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-tag .ping-badge {
+            color: #ffd700;
+            font-size: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+
+        .chat-box {
+            background: rgba(10, 18, 14, 0.95);
+            border: 1px solid #00e5ff;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .chat-status { font-size: 12px; color: #00ff66; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; justify-content: space-between; }
+        .status-left { display: flex; align-items: center; gap: 6px; }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff66; border-radius: 50%; box-shadow: 0 0 8px #00ff66; }
+        
+        .my-ping {
+            background: rgba(0, 255, 102, 0.15);
+            color: #00ff66;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px solid rgba(0, 255, 102, 0.3);
+        }
+
+        .messages-container {
+            height: 230px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-msg { background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; font-size: 13px; max-width: 85%; word-break: break-all; }
+        .chat-msg .sender { color: #00e5ff; font-weight: bold; margin-left: 6px; }
+        .chat-msg.my-msg { background: rgba(0, 255, 102, 0.15); border-right: 3px solid #00ff66; align-self: flex-end; }
+        .chat-msg.sys-msg { background: rgba(255, 215, 0, 0.1); color: #ffd700; align-self: center; font-size: 12px; text-align: center; width: 100%; }
+
+        .sticker-bar { display: flex; gap: 12px; margin-bottom: 10px; overflow-x: auto; padding: 8px 4px; }
+        .sticker-item { font-size: 26px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 12px; padding: 6px 12px; cursor: pointer; }
+
+        .chat-input-row { display: flex; gap: 8px; }
+        .chat-input-row input { flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(0, 229, 255, 0.5); border-radius: 6px; color: #fff; outline: none; }
+        .chat-input-row button { padding: 10px 20px; background: #00e5ff; border: none; color: #000; font-weight: bold; border-radius: 6px; cursor: pointer; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
+            z-index: 100; display: none; justify-content: center; align-items: center;
+        }
+        .modal-box { background: rgba(18, 28, 22, 0.98); border: 2px solid #00ff66; border-radius: 16px; padding: 25px; text-align: center; max-width: 380px; width: 90%; }
+        .cart-details { background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: right; }
+        .cart-item-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .cart-item-row.price-row { color: #ffd700; font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px; }
+        .modal-actions { display: flex; gap: 10px; }
+        .btn-cancel { flex: 1; padding: 10px; background: rgba(255,77,77,0.2); border: 1px solid #ff4d4d; color: #ff4d4d; border-radius: 6px; cursor: pointer; }
+        .btn-continue { flex: 1; padding: 10px; background: #00ff66; border: none; color: #000; font-weight: bold; border-radius: 6px; cursor: pointer; }
+
+        .logout-btn-wrapper {
+            margin-top: 15px;
+            text-align: left;
+        }
+        .logout-btn {
+            background: rgba(255, 77, 77, 0.2);
+            border: 1px solid #ff4d4d;
+            color: #ff6666;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        footer { position: relative; z-index: 10; width: 100%; text-align: center; padding: 15px; background: rgba(10, 18, 14, 0.85); border-top: 1px solid rgba(0, 255, 102, 0.3); margin-top: 30px; }
+        footer a { color: #ffd700; text-decoration: none; font-weight: bold; direction: ltr; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <!-- موزیک پس‌زمینه موتزارت -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://dl.just-music.ir/music//Collections/VA%20-%20The%20most%20relaxing%20Piano%20album%20in%20the%20world%20Ever(2009)/01%20-%20Wolfgang%20Amadeus%20Mozart%20-%20Piano%20Concerto%20No.21.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="bg-pattern">
+        <div class="neon-line-left"></div>
+        <div class="neon-line-right"></div>
+    </div>
+
+    <!-- فرم ورود و ثبت نام -->
+    <div class="container" id="login-section" style="max-width: 450px;">
+        <div class="card">
+            <h2 class="card-title">حساب کاربری شاپ</h2>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="tabLoginBtn" type="button" onclick="playClickSound(); switchAuthTab('login')">ورود به حساب</button>
+                <button class="auth-tab-btn" id="tabRegisterBtn" type="button" onclick="playClickSound(); switchAuthTab('register')">ثبت‌نام جدید</button>
+            </div>
+
+            <!-- بخش ورود -->
+            <div class="auth-form-section active" id="loginFormSection">
+                <form id="realLoginForm">
+                    <div class="input-group">
+                        <label>نام کاربری</label>
+                        <input type="text" id="loginUser" placeholder="نام کاربری خود را وارد کنید" autocomplete="username">
+                    </div>
+                    <div class="input-group">
+                        <label>رمز عبور</label>
+                        <input type="password" id="loginPass" placeholder="رمز عبور خود را وارد کنید" autocomplete="current-password">
+                    </div>
+                    
+                    <div class="error-message" id="loginError">
+                        ⚠️ نام کاربری یا رمز عبور اشتباه است!
+                    </div>
+
+                    <button type="submit" class="btn">ورود به منوی شاپ</button>
+                </form>
+            </div>
+
+            <!-- بخش ثبت‌نام -->
+            <div class="auth-form-section" id="registerFormSection">
+                <form id="realRegForm">
+                    <div class="input-group">
+                        <label>انتخاب نام کاربری</label>
+                        <input type="text" id="regUser" placeholder="یک نام کاربری یکتا انتخاب کنید" autocomplete="username">
+                    </div>
+                    <div class="input-group">
+                        <label>انتخاب رمز عبور</label>
+                        <input type="password" id="regPass" placeholder="یک رمز عبور قوی وارد کنید" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="error-message" id="regError">
+                        ⚠️ لطفاً تمام فیلدها را پر کنید یا نام کاربری تکراری است!
+                    </div>
+                    <div class="success-message" id="regSuccess">
+                        ✅ ثبت‌نام با موفقیت انجام شد! حالا وارد شوید.
+                    </div>
+
+                    <button type="submit" class="btn" style="background: linear-gradient(90deg, #ffd700, #00ff66);">تایید و ثبت‌نام</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- بخش اصلی فروشگاه SHOP RP NR -->
+    <div class="container" id="shop-section">
+        
+        <div class="card">
+            <h2 class="card-title">فروشگاه SHOP RP NR</h2>
+            
+            <div class="logout-btn-wrapper">
+                <button class="logout-btn" onclick="playClickSound(); handleLogout()">🚪 خروج از حساب</button>
+            </div>
+
+            <div class="owner-balance" style="margin-top: 15px;">
+                👑 موجودی مالک: 300k سکه 👑
+            </div>
+
+            <!-- ۱. فروشگاه سکه -->
+            <div class="section-header coins">🪙 فروشگاه سکه</div>
+            <div class="notice-box">📌 نکته: تحویل با روش جواهری و انتقال</div>
+            <div class="shop-grid">
+                <div class="item-card" onclick="playClickSound(); addToCart('5k سکه', '۳,۵۰۰ تومان')">
+                    <div class="item-amount">5k سکه</div>
+                    <div class="item-price">۳,۵۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card" onclick="playClickSound(); addToCart('10k سکه', '۷,۰۰۰ تومان')">
+                    <div class="item-amount">10k سکه</div>
+                    <div class="item-price">۷,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card" onclick="playClickSound(); addToCart('50k سکه', '۳۵,۰۰۰ تومان')">
+                    <div class="item-amount">50k سکه</div>
+                    <div class="item-price">۳۵,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card" onclick="playClickSound(); addToCart('100k سکه', '۷۰,۰۰۰ تومان')">
+                    <div class="item-amount">100k سکه</div>
+                    <div class="item-price">۷۰,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+            </div>
+
+            <!-- ۲. فروشگاه خدمات تلگرام -->
+            <div class="section-header telegram">✈️ فروشگاه خدمات تلگرام</div>
+            <div class="shop-grid telegram-grid">
+                <div class="item-card telegram-card" onclick="playClickSound(); addToCart('شماره مجازی آمریکا تلگرام', '۸۵,۰۰۰ تومان')">
+                    <div class="item-amount">🇺🇸 شماره مجازی آمریکا</div>
+                    <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">کیفیت بالا + تحویل سریع</div>
+                    <div class="item-price">۸۵,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card telegram-card" onclick="playClickSound(); addToCart('شماره مجازی کانادا تلگرام', '۹۰,۰۰۰ تومان')">
+                    <div class="item-amount">🇨🇦 شماره مجازی کانادا</div>
+                    <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">اختصاصی و معتبر</div>
+                    <div class="item-price">۹۰,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card telegram-card" onclick="playClickSound(); addToCart('۱,۰۰۰ عضو ایرانی تلگرام', '۱۸۰,۰۰۰ تومان')">
+                    <div class="item-amount">👥 ممبر ایرانی (1k)</div>
+                    <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">هر ۱,۰۰۰ عضو واقعی</div>
+                    <div class="item-price">۱۸۰,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+            </div>
+
+            <!-- ۳. فروشگاه جم -->
+            <div class="section-header gems">💎 فروشگاه جم</div>
+            <div class="notice-box">📌 سفارش جم بدون ورود به اکانت و تنها از طریق شناسه کاربر زده می‌شود.</div>
+            <div class="shop-grid gems-grid">
+                <div class="item-card" onclick="playClickSound(); addToCart('8400 جم', '۳۰۰,۰۰۰ تومان')">
+                    <div><span class="discount-badge">5% تخفیف</span></div>
+                    <div class="item-amount">💎 8400 جم</div>
+                    <div class="item-price">۳۰۰,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card" onclick="playClickSound(); addToCart('18000 جم', '۶۰۰,۰۰۰ تومان')">
+                    <div><span class="discount-badge">10% تخفیف</span></div>
+                    <div class="item-amount">💎 18000 جم</div>
+                    <div class="item-price">۶۰۰,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+            </div>
+
+            <!-- ۴. فروشگاه باگ -->
+            <div class="section-header bugs">👾 فروشگاه باگ</div>
+            <div class="shop-grid" style="grid-template-columns: 1fr;">
+                <div class="item-card bug-card" onclick="playClickSound(); addToCart('باگ دوبل تضمینی نسخه جدید', '۳۵,۰۰۰ تومان')">
+                    <div class="item-amount" style="color: #00ff66;">💥 باگ دوبل تضمینی نسخه جدید</div>
+                    <div style="font-size: 13px; color: #ddd; margin-bottom: 8px;">آموزش کامل با ویدیو آموزشی + ارائه نسخه جدید باگ</div>
+                    <div class="item-price">۳۵,۰۰۰ تومان (35T)</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+            </div>
+
+            <!-- ۵. بخش آموزش‌ها -->
+            <div class="section-header courses">🎓 بخش آموزش‌ها</div>
+            <div class="shop-grid courses-grid">
+                <div class="item-card course-card" onclick="playClickSound(); addToCart('آموزش سایت‌سازی', '۳۰,۰۰۰ تومان')">
+                    <div class="item-amount">🌐 آموزش سایت‌سازی</div>
+                    <div style="font-size: 12px; color: #ddd; margin-bottom: 8px;">یادگیری کامل طراحی و راه‌اندازی سایت</div>
+                    <div class="item-price">۳۰,۰۰۰ تومان (30T)</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+                <div class="item-card course-card" onclick="playClickSound(); addToCart('آموزش بازی‌سازی', '۳۰,۰۰۰ تومان')">
+                    <div class="item-amount">🎮 آموزش بازی‌سازی</div>
+                    <div style="font-size: 12px; color: #ddd; margin-bottom: 8px;">آموزش ساخت و برنامه‌نویسی بازی</div>
+                    <div class="item-price">۳۰,۰۰۰ تومان (30T)</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+            </div>
+
+            <!-- ۶. فروشگاه خدمات روبیکا -->
+            <div class="section-header rubika">🟣 فروشگاه خدمات روبیکا</div>
+            <div class="shop-grid rubika-grid" style="grid-template-columns: 1fr;">
+                <div class="item-card rubika-card" onclick="playClickSound(); addToCart('1000 عضو واقعی ایرانی روبیکا (با 111 هدیه)', '۸۵,۰۰۰ تومان')">
+                    <div class="item-amount">👥 اعضای واقعی روبیکا</div>
+                    <div style="font-size: 13px; color: #ddd; margin-bottom: 6px;">هر 1000 عضو واقعی ایرانی</div>
+                    <div style="font-size: 12px; color: #00ff66; margin-bottom: 8px; font-weight: bold;">🎁 همراه با 111 عضو هدیه</div>
+                    <div class="item-price">۸۵,۰۰۰ تومان</div>
+                    <button class="buy-online-btn" type="button">خرید آنلاین</button>
+                </div>
+            </div>
+
+            <!-- ۷. چت روم آنلاین کاربران -->
+            <div class="section-header chat">💬 چت روم آنلاین کاربران (زنده)</div>
+            <div class="chat-box">
+                
+                <div class="online-users-box">
+                    <div class="online-users-title">
+                        <span>🟢 کاربران آنلاین در حال حاضر:</span>
+                        <span id="onlineCount" style="color: #ffd700;">۱ نفر</span>
+                    </div>
+                    <div class="users-list" id="usersListContainer"></div>
+                </div>
+
+                <div class="chat-status" id="chatStatus">
+                    <div class="status-left">
+                        <span class="status-dot"></span> متصل شد (فعال)
+                    </div>
+                    <div id="userPingDisplay" class="my-ping">پینگ: در حال اندازه گیری...</div>
+                </div>
+                
+                <div class="messages-container" id="chatBox">
+                    <div class="chat-msg sys-msg">به چت روم عمومی خوش آمدید! پیام‌ها زنده و همگام هستند.</div>
+                    <div class="chat-msg sys-msg">پیام از طریق RP NR: رفقای گل برای ثبت سفارش به ایدی پیام بدید...</div>
+                </div>
+
+                <div class="sticker-bar">
+                    <span class="sticker-item" onclick="playClickSound(); sendSticker('😎')">😎</span>
+                    <span class="sticker-item" onclick="playClickSound(); sendSticker('🔥')">🔥</span>
+                    <span class="sticker-item" onclick="playClickSound(); sendSticker('💎')">💎</span>
+                    <span class="sticker-item" onclick="playClickSound(); sendSticker('🚀')">🚀</span>
+                    <span class="sticker-item" onclick="playClickSound(); sendSticker('❤️')">❤️</span>
+                    <span class="sticker-item" onclick="playClickSound(); sendSticker('👑')">👑</span>
+                </div>
+
+                <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." onkeydown="if(event.key === 'Enter') { playClickSound(); sendMessage(); }">
+                    <button type="button" onclick="playClickSound(); sendMessage();">ارسال</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- سبد خرید -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <h3 style="color:#00ff66; margin-bottom:15px;">🛒 سبد خرید شما</h3>
+            <div id="cartContent">
+                <div class="cart-details">
+                    <div class="cart-item-row">
+                        <span>محصول:</span>
+                        <strong id="cartItemName">-</strong>
+                    </div>
+                    <div class="cart-item-row price-row">
+                        <span>قیمت:</span>
+                        <span id="cartItemPrice">-</span>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="playClickSound(); closeCart();">لغو</button>
+                    <button type="button" class="btn-continue" onclick="playClickSound(); proceedToSupport();">ادامه خرید</button>
+                </div>
+            </div>
+            <div id="supportInfo" style="display:none; margin-top:15px;">
+                <p>برای دریافت این محصول یا خدمات به پشتیبانی پیام دهید:</p>
+                <h3 style="color:#ffd700; margin:10px 0; direction:ltr;">@RPNRMALEK</h3>
+                <button type="button" class="btn-cancel" style="width:100%" onclick="playClickSound(); closeCart();">بستن</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>چنل روبیکایی:</p>
+        <a href="https://rubika.ir/RPNRCLAN" target="_blank">@RPNRCLAN</a>
+    </footer>
+
+    <script>
+        let currentUser = "";
+        let audioCtx = null;
+        let chatChannel = null;
+        let activeUsers = {};
+        let myPingValue = 25;
+
+        // بررسی ورود قبلی کاربر هنگام لود صفحه
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('rp_nr_logged_in_user');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('shop-section').style.display = 'block';
+                
+                const music = document.getElementById('bgMusic');
+                music.volume = 0.4;
+                music.play().catch(e => console.log("Audio autoplay blocked:", e));
+
+                initRealtimeChatSystem();
+            }
+
+            // متصل کردن رویدادهای سابمیت فرم‌ها به شکل استاندارد
+            document.getElementById('realLoginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+
+            document.getElementById('realRegForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleRegister();
+            });
+        });
+
+        function playClickSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
+
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        function switchAuthTab(tab) {
+            const loginBtn = document.getElementById('tabLoginBtn');
+            const regBtn = document.getElementById('tabRegisterBtn');
+            const loginSec = document.getElementById('loginFormSection');
+            const regSec = document.getElementById('registerFormSection');
+
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('regError').style.display = 'none';
+            document.getElementById('regSuccess').style.display = 'none';
+
+            if (tab === 'login') {
+                loginBtn.classList.add('active');
+                regBtn.classList.remove('active');
+                loginSec.classList.add('active');
+                regSec.classList.remove('active');
+            } else {
+                regBtn.classList.add('active');
+                loginBtn.classList.remove('active');
+                regSec.classList.add('active');
+                loginSec.classList.remove('active');
+            }
+        }
+
+        function handleRegister() {
+            const user = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+            const errBox = document.getElementById('regError');
+            const succBox = document.getElementById('regSuccess');
+
+            if (!user || !pass) {
+                succBox.style.display = 'none';
+                errBox.style.display = 'block';
+                errBox.innerText = '⚠️ لطفاً فیلدها را به طور کامل پر کنید!';
+                return;
+            }
+
+            let usersDb = JSON.parse(localStorage.getItem('rp_nr_users_db') || '{}');
+            if (usersDb[user]) {
+                succBox.style.display = 'none';
+                errBox.style.display = 'block';
+                errBox.innerText = '⚠️ این نام کاربری قبلاً ثبت‌نام شده است!';
+                return;
+            }
+
+            usersDb[user] = pass;
+            localStorage.setItem('rp_nr_users_db', JSON.stringify(usersDb));
+
+            errBox.style.display = 'none';
+            succBox.style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('regUser').value = '';
+                document.getElementById('regPass').value = '';
+                switchAuthTab('login');
+            }, 1500);
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const errorBox = document.getElementById('loginError');
+
+            let usersDb = JSON.parse(localStorage.getItem('rp_nr_users_db') || '{}');
+
+            // اگر کاربر تست اولیه وجود نداشت، یک اکانت پیش‌فرض تستی ایجاد می‌شود تا ورود با مشکل مواجه نشود
+            if (Object.keys(usersDb).length === 0) {
+                usersDb['admin'] = '123456';
+                localStorage.setItem('rp_nr_users_db', JSON.stringify(usersDb));
+            }
+
+            if (usersDb[user] && usersDb[user] === pass) {
+                errorBox.style.display = 'none';
+                currentUser = user;
+                localStorage.setItem('rp_nr_logged_in_user', user);
+                
+                const music = document.getElementById('bgMusic');
+                music.volume = 0.4;
+                music.play().catch(e => console.log(e));
+
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('shop-section').style.display = 'block';
+
+                initRealtimeChatSystem();
+            } else {
+                errorBox.style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('rp_nr_logged_in_user');
+            currentUser = "";
+            document.getElementById('shop-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            
+            const music = document.getElementById('bgMusic');
+            music.pause();
+        }
+
+        function measurePing() {
+            let startTime = performance.now();
+            fetch(window.location.href, { method: 'HEAD', cache: 'no-store' })
+                .then(() => {
+                    let duration = Math.round(performance.now() - startTime);
+                    let jitter = Math.floor(Math.random() * 8) - 4;
+                    myPingValue = Math.max(10, duration + jitter);
+                })
+                .catch(() => {
+                    myPingValue = Math.floor(Math.random() * 30) + 20;
+                })
+                .finally(() => {
+                    const pingEl = document.getElementById('userPingDisplay');
+                    if(pingEl) pingEl.innerText = `پینگ: ${myPingValue}ms`;
+                });
+        }
+
+        function initRealtimeChatSystem() {
+            measurePing();
+            setInterval(measurePing, 4000);
+
+            if (window.BroadcastChannel) {
+                chatChannel = new BroadcastChannel('rp_nr_shop_chat_channel_v2');
+
+                chatChannel.onmessage = function (event) {
+                    const data = event.data;
+                    if (data.type === 'chat') {
+                        if (data.sender !== currentUser) {
+                            displayMessage(data.sender, data.text, false);
+                        }
+                    } else if (data.type === 'presence') {
+                        activeUsers[data.username] = { ping: data.ping, time: Date.now() };
+                        updateOnlineUsersUI();
+                    }
+                };
+            }
+
+            registerPresence();
+            setInterval(registerPresence, 3000);
+
+            setInterval(() => {
+                let now = Date.now();
+                let changed = false;
+                for (let usr in activeUsers) {
+                    if (now - activeUsers[usr].time > 8000) {
+                        delete activeUsers[usr];
+                        changed = true;
+                    }
+                }
+                if (changed) updateOnlineUsersUI();
+            }, 4000);
+        }
+
+        function registerPresence() {
+            if (!currentUser) return;
+            activeUsers[currentUser] = { ping: myPingValue, time: Date.now() };
+            updateOnlineUsersUI();
+
+            if (chatChannel) {
+                chatChannel.postMessage({
+                    type: 'presence',
+                    username: currentUser,
+                    ping: myPingValue
+                });
+            }
+        }
+
+        function updateOnlineUsersUI() {
+            const container = document.getElementById('usersListContainer');
+            const countEl = document.getElementById('onlineCount');
+            if(!container) return;
+            container.innerHTML = '';
+
+            let users = Object.keys(activeUsers);
+            countEl.innerText = `${users.length} کاربر`;
+
+            users.forEach(usr => {
+                let pVal = activeUsers[usr].ping || myPingValue;
+                let tag = document.createElement('div');
+                tag.className = 'user-tag';
+                tag.innerHTML = `🟢 ${escapeHTML(usr)} <span class="ping-badge">${pVal}ms</span>`;
+                container.appendChild(tag);
+            });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+
+            if (text !== "") {
+                displayMessage(currentUser, text, true);
+
+                if (chatChannel) {
+                    chatChannel.postMessage({
+                        type: 'chat',
+                        sender: currentUser,
+                        text: text
+                    });
+                }
+                input.value = "";
+            }
+        }
+
+        function sendSticker(sticker) {
+            const stickerMsg = `استیکر: ${sticker}`;
+            displayMessage(currentUser, stickerMsg, true);
+
+            if (chatChannel) {
+                chatChannel.postMessage({
+                    type: 'chat',
+                    sender: currentUser,
+                    text: stickerMsg
+                });
+            }
+        }
+
+        function displayMessage(sender, text, isMe) {
+            const box = document.getElementById('chatBox');
+            if(!box) return;
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-msg' + (isMe ? ' my-msg' : '');
+            
+            const senderName = isMe ? 'شما' : sender;
+            msgDiv.innerHTML = `<span class="sender">${escapeHTML(senderName)}:</span> ${escapeHTML(text)}`;
+            
+            box.appendChild(msgDiv);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+
+        function addToCart(itemName, itemPrice) {
+            document.getElementById('cartItemName').innerText = itemName;
+            document.getElementById('cartItemPrice').innerText = itemPrice;
+            document.getElementById('cartContent').style.display = 'block';
+            document.getElementById('supportInfo').style.display = 'none';
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function proceedToSupport() {
+            document.getElementById('cartContent').style.display = 'none';
+            document.getElementById('supportInfo').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
