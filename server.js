@@ -1,89 +1,55 @@
 const express = require("express");
 const http = require("http");
-const WebSocket = require("ws");
+const { Apinator } = require("@apinator/server");
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
 
-const users = new Map();
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("ShopRPNR server is running!");
+const realtime = new Apinator({
+  appId: "d411f94a-9a60-4214-be9c-8d399b5d5dbf",
+  key: "app_10f81786849a0ad25f95c165cb326f2dfc17cd9b",
+  secret: process.env.APINATOR_SECRET,
+  cluster: "us"
 });
 
-function broadcast(data) {
-  const message = JSON.stringify(data);
+app.get("/", (req, res) => {
+  res.send("ShopRPNR realtime server is running!");
+});
 
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
-}
+app.post("/realtime/auth", (req, res) => {
+  const { socket_id, channel_name } = req.body;
 
-function sendUsers() {
-  broadcast({
-    type: "users",
-    users: Array.from(users.values())
-  });
-}
+  if (!socket_id || !channel_name) {
+    return res.status(400).json({
+      error: "Missing socket_id or channel_name"
+    });
+  }
 
-wss.on("connection", (socket) => {
-  let username = null;
+  const channelData = channel_name.startsWith("presence-")
+    ? JSON.stringify({
+        user_id: "shoprpnr-user",
+        user_info: {
+          name: "ShopRPNR User"
+        }
+      })
+    : undefined;
 
-  socket.on("message", (raw) => {
-    try {
-      const data = JSON.parse(raw.toString());
+  try {
+    const result = realtime.authenticateChannel(
+      socket_id,
+      channel_name,
+      channelData
+    );
 
-      if (data.type === "join") {
-        username = String(data.username || "کاربر")
-          .trim()
-          .slice(0, 30);
-
-        if (!username) username = "کاربر";
-
-        users.set(socket, username);
-        sendUsers();
-        return;
-      }
-
-      if (data.type === "chat") {
-        const text = String(data.text || "").trim().slice(0, 500);
-
-        if (!text || !username) return;
-
-        broadcast({
-          type: "chat",
-          username,
-          text,
-          time: Date.now()
-        });
-
-        return;
-      }
-
-      if (data.type === "sticker") {
-        const sticker = String(data.sticker || "").slice(0, 20);
-
-        if (!sticker || !username) return;
-
-        broadcast({
-          type: "sticker",
-          username,
-          sticker,
-          time: Date.now()
-        });
-      }
-    } catch (error) {
-      console.log("Invalid message");
-    }
-  });
-
-  socket.on("close", () => {
-    users.delete(socket);
-    sendUsers();
-  });
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Authentication failed"
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
